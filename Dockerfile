@@ -32,12 +32,11 @@ RUN adduser --system --group --no-create-home druid \
 # Druid (from source)
 RUN mkdir -p /usr/local/druid/lib /usr/local/druid/repository
 # trigger rebuild only if branch changed
-ADD https://api.github.com/repos/metamx/druid/git/refs/heads/master druid-version.json
-RUN git clone -q --branch master --depth 1 https://github.com/metamx/druid.git /tmp/druid
+RUN git clone https://github.com/metamx/druid.git /tmp/druid 
 WORKDIR /tmp/druid
 # package and install Druid locally
-RUN mvn -U -B clean install -DskipTests=true -Dmaven.javadoc.skip=true \
-  && cp services/target/druid-services-0.8.0-SNAPSHOT-selfcontained.jar /usr/local/druid/lib
+RUN  git pull origin master && git fetch -a && git checkout 0.7.x && mvn -U -B clean install -DskipTests=true -Dmaven.javadoc.skip=true \
+  && cp services/target/druid-services-0.7.4-SNAPSHOT-selfcontained.jar /usr/local/druid/lib
 
 # pull dependencies for Druid extensions
 
