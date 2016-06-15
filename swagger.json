@@ -1,0 +1,264 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Authenticated Digital Analytics API",
+    "description" : "The Authenticated Digital Reporting API is allows platforms to view their ad quality metrics, broken down by any number of dimensions.",
+    "version" : "1.0.0",
+    "contact" : {
+      "name" : "hello@authenticated.digital"
+    }
+  },
+  "host" : "app.authenticated.digital",
+  "schemes" : [ "https" ],
+  "basePath" : "/analytics",
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/custom" : {
+      "get" : {
+        "summary" : "View authenticated analytics data",
+        "description" : "The Custom endpoint is the main endpoint for all reporting data",
+        "parameters" : [ {
+          "$ref" : "#/parameters/fields"
+        }, {
+          "$ref" : "#/parameters/limit"
+        }, {
+          "$ref" : "#/parameters/sorts"
+        }, {
+          "$ref" : "#/parameters/page"
+        }, {
+          "$ref" : "#/parameters/granularity"
+        }, {
+          "$ref" : "#/parameters/start_date"
+        }, {
+          "$ref" : "#/parameters/end_date"
+        } ],
+        "tags" : [ "Custom" ],
+        "responses" : {
+          "200" : {
+            "description" : "An array of data",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Data"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Not Authenticated"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "500" : {
+            "description" : "System error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters" : {
+    "end_date" : {
+      "name" : "end_date",
+      "in" : "query",
+      "description" : "The end date for the data query",
+      "required" : false,
+      "type" : "string"
+    },
+    "fields" : {
+      "name" : "fields",
+      "in" : "query",
+      "description" : "The platform used to deliver the ad",
+      "required" : false,
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "collectionFormat" : "csv",
+        "enum" : [ "xplatform", "exchange", "total", "overall_total_pct", "measured_pct", "authentic_pct", "fraudulent_pct", "opaque_pct", "inaccurate_pct", "indirect_pct", "low_view_pct" ]
+      }
+    },
+    "granularity" : {
+      "name" : "granularity",
+      "in" : "query",
+      "description" : "The granularity of data to segment",
+      "required" : false,
+      "type" : "string",
+      "enum" : [ "all" ]
+    },
+    "limit" : {
+      "name" : "limit",
+      "in" : "query",
+      "description" : "Limit the number of items to the specified number",
+      "required" : false,
+      "type" : "number",
+      "format" : "integer"
+    },
+    "page" : {
+      "name" : "page",
+      "in" : "query",
+      "description" : "The page number for items with more than one page of data",
+      "required" : false,
+      "type" : "number",
+      "format" : "integer"
+    },
+    "sorts" : {
+      "name" : "sorts",
+      "in" : "query",
+      "description" : "The platform used to deliver the ad",
+      "required" : false,
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "collectionFormat" : "csv",
+        "enum" : [ "xplatform", "exchange", "total", "overall_total_pct", "measured_pct", "authentic_pct", "fraudulent_pct", "opaque_pct", "inaccurate_pct", "indirect_pct", "low_view_pct" ]
+      }
+    },
+    "start_date" : {
+      "name" : "start_date",
+      "in" : "query",
+      "description" : "The start date for the data query",
+      "required" : false,
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Data" : {
+      "type" : "object",
+      "properties" : {
+        "count" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The count of rows of data in the data set"
+        },
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DataRow"
+          }
+        },
+        "page" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The current page number"
+        },
+        "pages" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The total number of pages"
+        },
+        "totals" : {
+          "$ref" : "#/definitions/DataRow"
+        }
+      }
+    },
+    "DataRow" : {
+      "type" : "object",
+      "properties" : {
+        "authentic" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of authentic impressions"
+        },
+        "authentic_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of authentic impressions"
+        },
+        "fraudulent" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of fraudulent impressions"
+        },
+        "fraudulent_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of fraudulent impressions"
+        },
+        "inaccurate" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of inaccurate impressions"
+        },
+        "inaccurate_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of inaccurate impressions"
+        },
+        "indirect" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of indirect impressions"
+        },
+        "indirect_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of indirect impressions"
+        },
+        "low_view" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of low viewable impressions"
+        },
+        "low_view_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of low viewable impressions"
+        },
+        "measured" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of measured impressions"
+        },
+        "measured_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of measured impressions"
+        },
+        "opaque" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of opaque impressions"
+        },
+        "opaque_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of opaque impressions"
+        },
+        "overall_total_pct" : {
+          "type" : "number",
+          "format" : "decimal",
+          "description" : "The percentage of overall total impressions"
+        },
+        "timestamp" : {
+          "type" : "string",
+          "description" : "The timestamp when this data set was generated"
+        },
+        "total" : {
+          "type" : "number",
+          "format" : "integer",
+          "description" : "The number of total impressions"
+        }
+      }
+    },
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "number",
+          "format" : "integer"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "fields" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
