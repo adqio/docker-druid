@@ -9,12 +9,15 @@
     }
   },
   "securityDefinitions" : {
-    "api_key" : {
+    "UserSecurity" : {
       "type" : "apiKey",
       "in" : "query",
       "name" : "api_key"
     }
   },
+  "security" : [ {
+    "UserSecurity" : [ ]
+  } ],
   "host" : "app.authenticated.digital",
   "schemes" : [ "https" ],
   "basePath" : "/analytics",
